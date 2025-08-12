@@ -19,6 +19,7 @@
 
 <body>
   <div class="container mt-4">
+    <!-- NAV -->
     <nav class="navbar navbar-expand-lg bg-white rounded-3 shadow-sm mb-4">
       <div class="container-fluid">
         <a class="navbar-brand d-flex align-items-center" href="#">
@@ -33,22 +34,29 @@
       </div>
     </nav>
 
+    <!-- FORM DE NOVA TAREFA (mensagem + data limite) -->
     <div class="card p-3 mb-4">
-      <div class="input-group">
-        <input id="inputTask" type="text" class="form-control" placeholder="Digite uma nova tarefa..." aria-label="Nova tarefa">
-        <span class="input-group-text bg-white">
-          <i class="bi bi-calendar-check text-primary"></i>
-        </span>
-        <button id="btnAdd" class="btn btn-primary fw-bold" type="button">ADICIONAR</button>
+      <div class="row g-2">
+        <div class="col-12 col-md-7">
+          <input id="inputTask" type="text" class="form-control" placeholder="Digite a tarefa..." aria-label="Nova tarefa">
+        </div>
+        <div class="col-12 col-md-3">
+          <input id="inputDue" type="date" class="form-control" aria-label="Data limite">
+        </div>
+        <div class="col-12 col-md-2 d-grid">
+          <button id="btnAdd" class="btn btn-primary fw-bold" type="button">ADICIONAR</button>
+        </div>
       </div>
     </div>
 
+    <!-- FILTROS -->
     <div class="d-flex justify-content-between mb-4">
       <button id="filterAll" class="btn btn-primary fw-bold">TODAS (<span id="countAll">0</span>)</button>
       <button id="filterPending" class="btn btn-outline-primary fw-bold">PENDENTES (<span id="countPending">0</span>)</button>
       <button id="filterDone" class="btn btn-outline-primary fw-bold">CONCLUÍDOS (<span id="countDone">0</span>)</button>
     </div>
 
+    <!-- LISTA -->
     <ul id="taskList" class="list-group list-group-flush bg-white rounded-3 shadow-sm"></ul>
   </div>
 

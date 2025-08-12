@@ -7,42 +7,61 @@ if (!isLogged || !currentEmail) {
 
 // Seletores
 const inputTask = document.getElementById('inputTask');
-const btnAdd = document.getElementById('btnAdd');
-const ul = document.getElementById('taskList');
+const inputDue  = document.getElementById('inputDue'); // NOVO (type="date" no HTML)
+const btnAdd    = document.getElementById('btnAdd');
+const ul        = document.getElementById('taskList');
 
-const btnAll = document.getElementById('filterAll');
+const btnAll     = document.getElementById('filterAll');
 const btnPending = document.getElementById('filterPending');
-const btnDone = document.getElementById('filterDone');
+const btnDone    = document.getElementById('filterDone');
 
-const countAll = document.getElementById('countAll');
+const countAll     = document.getElementById('countAll');
 const countPending = document.getElementById('countPending');
-const countDone = document.getElementById('countDone');
+const countDone    = document.getElementById('countDone');
 
-const btnLogout = document.getElementById('btnLogout');
-const userEmailSpan = document.getElementById('userEmail');
-if (userEmailSpan) userEmailSpan.textContent = currentEmail || '';
+const btnLogout   = document.getElementById('btnLogout');
+const userEmailEl = document.getElementById('userEmail');
+if (userEmailEl) userEmailEl.textContent = currentEmail || '';
 
 // Storage key por usuário
 const STORAGE_KEY = `cronolist_tasks_${currentEmail}`;
 
-// Estado
-let tasks = [];         // {id, text, done}
+// Estado: agora inclui "due" (YYYY-MM-DD)
+let tasks = [];         // {id, text, due, done}
 let filter = 'all';     // 'all' | 'pending' | 'done'
 
-// Utils storage
+// ---- Utils de storage
 function loadTasks() {
-  try {
-    tasks = JSON.parse(localStorage.getItem(STORAGE_KEY)) || [];
-  } catch {
-    tasks = [];
-  }
+  try { tasks = JSON.parse(localStorage.getItem(STORAGE_KEY)) || []; }
+  catch { tasks = []; }
 }
 function saveTasks() {
   localStorage.setItem(STORAGE_KEY, JSON.stringify(tasks));
 }
 
-// Render
+// ---- Utils de data
+function formatDateBR(iso) {
+  if (!iso) return '';
+  const [y, m, d] = iso.split('-');
+  return `${d}/${m}/${y}`;
+}
+function isOverdue(isoDate) {
+  if (!isoDate) return false;
+  const today = new Date(); today.setHours(0,0,0,0);
+  const due = new Date(`${isoDate}T00:00:00`);
+  return due < today;
+}
+
+// ---- Render
 function render() {
+  // Ordena por data (as com data primeiro), depois por id
+  tasks.sort((a, b) => {
+    if (a.due && b.due) return a.due.localeCompare(b.due) || (a.id - b.id);
+    if (a.due && !b.due) return -1;
+    if (!a.due && b.due) return 1;
+    return a.id - b.id;
+  });
+
   ul.innerHTML = '';
   const filtered = tasks.filter(t => {
     if (filter === 'pending') return !t.done;
@@ -68,12 +87,24 @@ function render() {
     const label = document.createElement('label');
     label.className = 'form-check-label flex-grow-1';
     label.setAttribute('for', checkbox.id);
-    label.textContent = t.text;
+
+    // Texto "MSG — DATA" (se houver)
+    const dataTxt = t.due ? formatDateBR(t.due) : '';
+    label.textContent = dataTxt ? `${t.text} — ${dataTxt}` : t.text;
+
+    // Badge "Vencida" se não concluída e já passou da data
+    if (!t.done && isOverdue(t.due)) {
+      label.classList.add('text-danger');
+      const badge = document.createElement('span');
+      badge.className = 'badge bg-danger ms-2';
+      badge.textContent = 'Vencida';
+      label.appendChild(badge);
+    }
 
     left.appendChild(checkbox);
     left.appendChild(label);
 
-    // botão excluir (opcional)
+    // botão excluir
     const del = document.createElement('button');
     del.className = 'btn btn-link text-danger btn-sm btn-delete';
     del.innerHTML = '<i class="bi bi-trash"></i>';
@@ -93,21 +124,25 @@ function render() {
   countPending.textContent = pend;
   countDone.textContent = done;
 
-  // estilos nos botões de filtro
+  // Estilos dos filtros
   [btnAll, btnPending, btnDone].forEach(b => b.classList.remove('btn-primary'));
   [btnAll, btnPending, btnDone].forEach(b => b.classList.add('btn-outline-primary'));
-  if (filter === 'all') { btnAll.classList.remove('btn-outline-primary'); btnAll.classList.add('btn-primary'); }
-  if (filter === 'pending') { btnPending.classList.remove('btn-outline-primary'); btnPending.classList.add('btn-primary'); }
-  if (filter === 'done') { btnDone.classList.remove('btn-outline-primary'); btnDone.classList.add('btn-primary'); }
+  if (filter === 'all')     { btnAll.classList.replace('btn-outline-primary','btn-primary'); }
+  if (filter === 'pending') { btnPending.classList.replace('btn-outline-primary','btn-primary'); }
+  if (filter === 'done')    { btnDone.classList.replace('btn-outline-primary','btn-primary'); }
 }
 
-// Ações
-function addTask(text) {
-  const t = text.trim();
-  if (!t) return;
-  tasks.push({ id: Date.now(), text: t, done: false });
+// ---- Ações
+function addTask(text, due) {
+  const t = (text || '').trim();
+  const d = (due || '').trim();
+  if (!t) { inputTask.focus(); return; }
+  if (!d) { inputDue.focus(); return; } // data obrigatória (ajuste aqui se quiser tornar opcional)
+
+  tasks.push({ id: Date.now(), text: t, due: d, done: false });
   saveTasks();
   inputTask.value = '';
+  inputDue.value = '';
   render();
 }
 
@@ -126,23 +161,23 @@ function deleteTask(id) {
   render();
 }
 
-// Eventos
-btnAdd.addEventListener('click', () => addTask(inputTask.value));
-inputTask.addEventListener('keydown', (e) => {
-  if (e.key === 'Enter') addTask(inputTask.value);
+// ---- Eventos
+btnAdd.addEventListener('click', () => addTask(inputTask.value, inputDue.value));
+[inputTask, inputDue].forEach(el => {
+  el.addEventListener('keydown', (e) => {
+    if (e.key === 'Enter') addTask(inputTask.value, inputDue.value);
+  });
 });
 
-btnAll.addEventListener('click', () => { filter = 'all'; render(); });
-btnPending.addEventListener('click', () => { filter = 'pending'; render(); });
-btnDone.addEventListener('click', () => { filter = 'done'; render(); });
+btnAll.addEventListener('click',    () => { filter = 'all';     render(); });
+btnPending.addEventListener('click',() => { filter = 'pending'; render(); });
+btnDone.addEventListener('click',   () => { filter = 'done';    render(); });
 
 btnLogout.addEventListener('click', () => {
   localStorage.removeItem('cronolist_isLogged');
-  // mantém cronolist_email se quiser lembrar o usuário; remova se não quiser:
-  // localStorage.removeItem('cronolist_email');
   window.location.href = 'login.html';
 });
 
-// Inicializa
+// ---- Inicializa
 loadTasks();
 render();
