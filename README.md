@@ -1,6 +1,6 @@
 <p align="center">
   <div align="center">
-     <img src="\img\icon.png" alt="Logo" align="center"/>
+     <img src="\img\Logo-Crono.png" alt="Logo" align="center"/>
   </div>
 </p>
  
@@ -38,14 +38,19 @@
 ● Botão para marcar como concluída (riscar ou esconder).
 ● Usar localStorage para manter as tarefas mesmo após atualizar a página.
 
+### Diferenciais
+● Filtros: "Todos","Pendentes","Concluídas"
+● Animações simples ao concluir tarefas.
+
 
 ## 🎨Layout
 
-<img src="\img\screenshots\banner.png" alt="inicial"/>
-<img src="\img\screenshots\cardapio.png" alt="login"/>
-<img src="\img\screenshots\filtro.png" alt=" cadastro"/>
-<img src="\img\screenshots\carrinho.png" alt="esqueci senha"/>
-<img src="\img\screenshots\nome.png" alt="tarefas"/>
+<img src="\img\screenshots\inicial.png" alt="inicial"/>
+<img src="\img\screenshots\login.png" alt="login"/>
+<img src="\img\screenshots\cadastro.png" alt=" cadastro"/>
+<img src="\img\screenshots\esqueci.png" alt="esqueci senha"/>
+<img src="\img\screenshots\sucesso.png" alt="sucesso"/>
+<img src="\img\screenshots\painel.png" alt="painel"/>
 
 
 #### Demonstração
@@ -74,13 +79,13 @@ Além disto é bom ter um editor para trabalhar com o código como [VSCode](http
 Clone o projeto
 
 ```bash
-  git clone https://github.com/helomt/trier_organiza
+  git clone https://github.com/helomt/trier_organizador
 ```
 
 Entre no diretório do projeto
 
 ```bash
-  cd trier_lanchonete_express
+  cd trier_organizador
 ```
 
 ### 🧭Rodando a aplicação web
@@ -89,14 +94,11 @@ Abra o arquivo `index.html` em qualquer navegador ou execute o repositório usan
 
 ## 🚢Navegação
 
-1. **Navegação**: Usar a barra de rolagem para ver todos os produtos cadastrados
-2. **Filtros**: Filtro para facilitar a busca dos produtos
-3. **Adicionar ao Carrinho**: Adicionar produtos ao carrinho 
-4. **-/+**: Aumentar ou diminuir a quantidade de um produto
-5. **Remover**: Remover o produto do carrinho
-6. **Finalizar pedido**: Finalizar a seleção de produtos do pedido
-7. **Nome do Cliente**: Personalização do pedido com o nome do cliente
-8. **Senha de Retirada**: Senha gerada para retirada do pedido no balcão
+1. **Navegação**: Navegação entre páginas de maneira automática
+2. **Filtros**: Filtro para separar as tarefas
+3. **Criar nova tarefa**: Adicionar nova tarefa com data
+4. **Cadastro de novo usuário** Tela de cadastro
+5. **Login** Tela de login e recuperação de senha
 
 ## 🛠️Tecnologias
 
@@ -112,9 +114,9 @@ As seguintes ferramentas foram usadas na construção do projeto:
 
 Melhorias que ainda podem ser aplicadas:
 
-- Adicionar página de cadastro e login
-- Permitir diferentes tipos de retirada (balcão, delivery..)
-- Implementar pagamento por pix e cartão
+- Organizar as tarefas por data
+- Personalização da interface
+- Troca de tema
 
 Entre outras.
 
