@@ -151,5 +151,5 @@ Entre outras.
 
 The [MIT License](https://choosealicense.com/licenses/mit/)
 
-Copyright :copyright: 2025 - Projeto Lanchonete Express
+Copyright :copyright: 2025 - Projeto Crono List
 
