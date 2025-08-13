@@ -1,6 +1,6 @@
 <p align="center">
   <div align="center">
-     <img src="\img\Logo-Crono.png" alt="Logo" align="center"/>
+     <img src="\img\Logo-Crono.png" alt="Logo" height=200px align="center"/>
   </div>
 </p>
  
@@ -152,3 +152,4 @@ Entre outras.
 The [MIT License](https://choosealicense.com/licenses/mit/)
 
 Copyright :copyright: 2025 - Projeto Lanchonete Express
+
